@@ -8,6 +8,6 @@
 
 #import <UIKit/UIKit.h>
 
-@interface SLRViewController : UIViewController
+@interface SLRViewController : UITableViewController
 
 @end

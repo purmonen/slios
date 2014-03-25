@@ -1,48 +1,74 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="5053" systemVersion="13C64" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" initialViewController="QNJ-Qm-BK1">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="5053" systemVersion="13C64" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" initialViewController="Qd3-5S-vn5">
     <dependencies>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="3733"/>
     </dependencies>
     <scenes>
         <!--View Controller-->
-        <scene sceneID="Q2o-qS-Psw">
+        <scene sceneID="N4M-CD-vDM">
             <objects>
-                <viewController id="QNJ-Qm-BK1" customClass="SLRViewController" sceneMemberID="viewController">
-                    <layoutGuides>
-                        <viewControllerLayoutGuide type="top" id="EfF-GV-JBz"/>
-                        <viewControllerLayoutGuide type="bottom" id="WIT-qv-BIu"/>
-                    </layoutGuides>
-                    <view key="view" contentMode="scaleToFill" id="w3B-NF-wYn">
+                <tableViewController id="Qd3-5S-vn5" customClass="SLRViewController" sceneMemberID="viewController">
+                    <tableView key="view" opaque="NO" clipsSubviews="YES" clearsContextBeforeDrawing="NO" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="44" sectionHeaderHeight="22" sectionFooterHeight="22" id="peV-re-lBA">
                         <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
-                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                        <subviews>
-                            <searchBar contentMode="redraw" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="fwh-Wn-FV3">
-                                <rect key="frame" x="0.0" y="19" width="320" height="44"/>
-                                <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMaxY="YES"/>
-                                <textInputTraits key="textInputTraits"/>
-                                <connections>
-                                    <outlet property="delegate" destination="QNJ-Qm-BK1" id="kMC-0s-lQV"/>
-                                </connections>
-                            </searchBar>
-                        </subviews>
-                        <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
-                    </view>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                        <searchBar key="tableHeaderView" contentMode="redraw" id="JkK-T8-gKp">
+                            <rect key="frame" x="0.0" y="0.0" width="320" height="44"/>
+                            <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMaxY="YES"/>
+                            <textInputTraits key="textInputTraits"/>
+                            <connections>
+                                <outlet property="delegate" destination="Qd3-5S-vn5" id="1Ae-yH-8Mh"/>
+                            </connections>
+                        </searchBar>
+                        <prototypes>
+                            <tableViewCell contentMode="scaleToFill" selectionStyle="blue" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="DisplayCell" id="jkZ-HV-uIv">
+                                <rect key="frame" x="0.0" y="66" width="320" height="44"/>
+                                <autoresizingMask key="autoresizingMask"/>
+                                <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="jkZ-HV-uIv" id="OzY-Oh-EuD">
+                                    <rect key="frame" x="0.0" y="0.0" width="320" height="43"/>
+                                    <autoresizingMask key="autoresizingMask"/>
+                                </tableViewCellContentView>
+                                <color key="backgroundColor" red="0.11955406020000001" green="1" blue="1" alpha="1" colorSpace="calibratedRGB"/>
+                            </tableViewCell>
+                            <tableViewCell contentMode="scaleToFill" selectionStyle="blue" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="SearchCell" id="vzi-cr-mja">
+                                <rect key="frame" x="0.0" y="110" width="320" height="44"/>
+                                <autoresizingMask key="autoresizingMask"/>
+                                <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="vzi-cr-mja" id="2qR-4l-UX3">
+                                    <rect key="frame" x="0.0" y="0.0" width="320" height="43"/>
+                                    <autoresizingMask key="autoresizingMask"/>
+                                </tableViewCellContentView>
+                                <color key="backgroundColor" red="1" green="0.21359954435076389" blue="0.35965711463100947" alpha="1" colorSpace="calibratedRGB"/>
+                            </tableViewCell>
+                        </prototypes>
+                        <connections>
+                            <outlet property="dataSource" destination="Qd3-5S-vn5" id="kPV-P4-MPz"/>
+                            <outlet property="delegate" destination="Qd3-5S-vn5" id="9vo-Ep-ivi"/>
+                        </connections>
+                    </tableView>
                     <connections>
-                        <outlet property="searchDisplayController" destination="YiD-4N-YEN" id="fW1-9Z-fJ1"/>
+                        <outlet property="searchDisplayController" destination="gwI-NA-RKj" id="hDd-De-ab5"/>
                     </connections>
-                </viewController>
-                <placeholder placeholderIdentifier="IBFirstResponder" id="Qvm-Ls-rTA" userLabel="First Responder" sceneMemberID="firstResponder"/>
-                <searchDisplayController id="YiD-4N-YEN">
+                </tableViewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="QBv-yx-Pro" userLabel="First Responder" sceneMemberID="firstResponder"/>
+                <searchDisplayController id="wAT-oC-Lsi">
                     <connections>
-                        <outlet property="delegate" destination="QNJ-Qm-BK1" id="zya-qi-IHc"/>
-                        <outlet property="searchBar" destination="fwh-Wn-FV3" id="0tn-cU-Muh"/>
-                        <outlet property="searchContentsController" destination="QNJ-Qm-BK1" id="9no-H8-Sy9"/>
-                        <outlet property="searchResultsDataSource" destination="QNJ-Qm-BK1" id="ElL-pf-Ftf"/>
-                        <outlet property="searchResultsDelegate" destination="QNJ-Qm-BK1" id="zRz-wo-WI2"/>
+                        <outlet property="delegate" destination="Qd3-5S-vn5" id="Oaj-OL-raN"/>
+                        <outlet property="searchContentsController" destination="Qd3-5S-vn5" id="OQq-fP-tQG"/>
+                        <outlet property="searchResultsDataSource" destination="Qd3-5S-vn5" id="Whe-z4-xOi"/>
+                        <outlet property="searchResultsDelegate" destination="Qd3-5S-vn5" id="kYe-Wf-Xvk"/>
+                    </connections>
+                </searchDisplayController>
+                <searchDisplayController id="gwI-NA-RKj">
+                    <connections>
+                        <outlet property="delegate" destination="Qd3-5S-vn5" id="J9f-pg-GKd"/>
+                        <outlet property="searchBar" destination="JkK-T8-gKp" id="8mI-zY-8wm"/>
+                        <outlet property="searchContentsController" destination="Qd3-5S-vn5" id="UuL-qC-nSd"/>
+                        <outlet property="searchResultsDataSource" destination="Qd3-5S-vn5" id="va7-Ou-y2m"/>
+                        <outlet property="searchResultsDelegate" destination="Qd3-5S-vn5" id="sSW-dx-rzh"/>
                     </connections>
                 </searchDisplayController>
             </objects>
-            <point key="canvasLocation" x="665" y="-400"/>
+            <point key="canvasLocation" x="726" y="-468"/>
         </scene>
     </scenes>
     <simulatedMetricsContainer key="defaultSimulatedMetrics">

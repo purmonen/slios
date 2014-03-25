@@ -44,13 +44,14 @@
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    static NSString *CellIdentifier = @"ListPrototypeCell";
-    UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:CellIdentifier];
-    
-    // Configure the cell...
-    if (cell == nil) {
-        cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:CellIdentifier];
+	UITableViewCell *cell;
+    if (tableView == self.tableView) {
+        cell = [self.tableView dequeueReusableCellWithIdentifier:@"DisplayCell"];
+    } else {
+        cell = [self.tableView dequeueReusableCellWithIdentifier:@"SearchCell"];
     }
+    
+    
     
     // Display recipe in the table cell
     NSString *station = [self.searchResults objectAtIndex:indexPath.row];
@@ -72,7 +73,6 @@
     
     NSString *key=@"ac2159434219a6b27bd1e0c0f49e1bd3";
     NSString *urlString=[NSString stringWithFormat:@"https://api.trafiklab.se/sl/realtid/GetSite.json?stationSearch=%@&key=%@",[searchText stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding],key];
-    NSLog(@"%d",[urlString length]);
     self.lastSearhString = searchText;
     //id result = [self getJSON:urlString error:error];
     [self getAsyncJSON:urlString completionHandler:^(id result) {
@@ -95,6 +95,7 @@
             } @catch (NSException *exception) {
             } @finally {
                 [self.searchDisplayController.searchResultsTableView reloadData];
+                [self.tableView reloadData];
             }
         }];
     }];
