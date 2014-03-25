@@ -11,7 +11,7 @@
 @interface SLRViewController ()
 @property NSArray *stations;
 @property NSMutableArray *searchResults;
-
+@property NSString *lastSearhString;
 
 @end
 
@@ -72,23 +72,28 @@
     
     NSString *key=@"ac2159434219a6b27bd1e0c0f49e1bd3";
     NSString *urlString=[NSString stringWithFormat:@"https://api.trafiklab.se/sl/realtid/GetSite.json?stationSearch=%@&key=%@",[searchText stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding],key];
-    
+    NSLog(@"%d",[urlString length]);
+    self.lastSearhString = searchText;
     //id result = [self getJSON:urlString error:error];
     [self getAsyncJSON:urlString completionHandler:^(id result) {
         [[NSOperationQueue mainQueue] addOperationWithBlock:^{
+            if (self.lastSearhString != searchText) return;
             @try {
                 [self.searchResults removeAllObjects];
                 if (result == nil) return;
                 NSMutableDictionary *dict=(NSMutableDictionary*)result;
-                for (id station in [[[dict objectForKey:@"Hafas"] objectForKey:@"Sites"] objectForKey:@"Site"]) {
-                    NSLog(@"%@",[station objectForKey:@"Name"]);
-                    [self.searchResults addObject:[station objectForKey:@"Name"]];
-                }
-            }
-            @catch (NSException *exception) {
                 
-            }
-            @finally {
+                id stations = [[[dict objectForKey:@"Hafas"] objectForKey:@"Sites"] objectForKey:@"Site"];
+                
+                if ([stations isKindOfClass:[NSArray class]]) {
+                    for (id station in stations) {
+                        [self.searchResults addObject:[station objectForKey:@"Name"]];
+                    }
+                } else {
+                    [self.searchResults addObject:[stations objectForKey:@"Name"]];
+                }
+            } @catch (NSException *exception) {
+            } @finally {
                 [self.searchDisplayController.searchResultsTableView reloadData];
             }
         }];
