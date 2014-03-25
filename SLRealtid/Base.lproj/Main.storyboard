@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="5053" systemVersion="13C64" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" initialViewController="QNJ-Qm-BK1">
+    <dependencies>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="3733"/>
+    </dependencies>
+    <scenes>
+        <!--View Controller-->
+        <scene sceneID="Q2o-qS-Psw">
+            <objects>
+                <viewController id="QNJ-Qm-BK1" customClass="SLRViewController" sceneMemberID="viewController">
+                    <layoutGuides>
+                        <viewControllerLayoutGuide type="top" id="EfF-GV-JBz"/>
+                        <viewControllerLayoutGuide type="bottom" id="WIT-qv-BIu"/>
+                    </layoutGuides>
+                    <view key="view" contentMode="scaleToFill" id="w3B-NF-wYn">
+                        <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
+                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                        <subviews>
+                            <searchBar contentMode="redraw" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="fwh-Wn-FV3">
+                                <rect key="frame" x="0.0" y="19" width="320" height="44"/>
+                                <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMaxY="YES"/>
+                                <textInputTraits key="textInputTraits"/>
+                                <connections>
+                                    <outlet property="delegate" destination="QNJ-Qm-BK1" id="kMC-0s-lQV"/>
+                                </connections>
+                            </searchBar>
+                        </subviews>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
+                    </view>
+                    <connections>
+                        <outlet property="searchDisplayController" destination="YiD-4N-YEN" id="fW1-9Z-fJ1"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="Qvm-Ls-rTA" userLabel="First Responder" sceneMemberID="firstResponder"/>
+                <searchDisplayController id="YiD-4N-YEN">
+                    <connections>
+                        <outlet property="delegate" destination="QNJ-Qm-BK1" id="zya-qi-IHc"/>
+                        <outlet property="searchBar" destination="fwh-Wn-FV3" id="0tn-cU-Muh"/>
+                        <outlet property="searchContentsController" destination="QNJ-Qm-BK1" id="9no-H8-Sy9"/>
+                        <outlet property="searchResultsDataSource" destination="QNJ-Qm-BK1" id="ElL-pf-Ftf"/>
+                        <outlet property="searchResultsDelegate" destination="QNJ-Qm-BK1" id="zRz-wo-WI2"/>
+                    </connections>
+                </searchDisplayController>
+            </objects>
+            <point key="canvasLocation" x="665" y="-400"/>
+        </scene>
+    </scenes>
+    <simulatedMetricsContainer key="defaultSimulatedMetrics">
+        <simulatedStatusBarMetrics key="statusBar"/>
+        <simulatedOrientationMetrics key="orientation"/>
+        <simulatedScreenMetrics key="destination" type="retina4"/>
+    </simulatedMetricsContainer>
+</document>
