@@ -9,9 +9,10 @@
 #import "SLRViewController.h"
 
 @interface SLRViewController ()
-@property NSArray *stations;
+@property NSMutableArray *stations;
 @property NSMutableArray *searchResults;
 @property NSString *lastSearhString;
+@property NSString *SL_REALTID_API_KEY;
 
 @end
 
@@ -20,8 +21,9 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
-    self.stations = @[@"jakobsberg",@"centralen",@"spanga"];
-    self.searchResults=[[NSMutableArray alloc]init];
+    self.stations = [[NSMutableArray alloc] init];
+    self.searchResults = [[NSMutableArray alloc] init];
+	self.SL_REALTID_API_KEY = @"ac2159434219a6b27bd1e0c0f49e1bd3";
 	// Do any additional setup after loading the view, typically from a nib.
 }
 
@@ -31,6 +33,8 @@
     // Dispose of any resources that can be recreated.
 }
 
+
+
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView
 {
     // Return the number of sections.
@@ -39,47 +43,80 @@
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
     // Return the number of rows in the section.
-    return [self.searchResults count];
+    if (self.tableView == tableView) {
+        return [self.searchResults count];
+    }
+    return [self.stations count];
 }
+
+
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
 	UITableViewCell *cell;
     if (tableView == self.tableView) {
         cell = [self.tableView dequeueReusableCellWithIdentifier:@"DisplayCell"];
+        NSMutableDictionary *departure = [self.searchResults objectAtIndex:indexPath.row];
+        cell.textLabel.text = [NSString stringWithFormat:@"%@ %@", [departure objectForKey:@"LineNumber"], [departure objectForKey:@"DisplayTime"]];
     } else {
         cell = [self.tableView dequeueReusableCellWithIdentifier:@"SearchCell"];
-    }
-    
-    
-    
-    // Display recipe in the table cell
-    NSString *station = [self.searchResults objectAtIndex:indexPath.row];
-    cell.textLabel.text = station;
-    
+        NSMutableDictionary *station = [self.stations objectAtIndex:indexPath.row];
+        cell.textLabel.text = [station objectForKey:@"Name"];
+	}
     return cell;
+}
+
+- (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
+    if (tableView != self.tableView) {
+    	NSLog(@"%@", [tableView cellForRowAtIndexPath:indexPath].textLabel.text);
+        NSLog(@"%@", [self.stations objectAtIndex:indexPath.row]);
+
+        [self.searchDisplayController setActive:NO animated:YES];
+        [self getDeparturesById:[[self.stations objectAtIndex:indexPath.row] objectForKey:@"Number"]];
+    }
 }
 
 -(BOOL)searchDisplayController:(UISearchDisplayController *)controller shouldReloadTableForSearchString:(NSString *)searchString
 {
-    [self filterContentForSearchText:searchString];
-    
+    [self getStationsByString:searchString];
     return  NO;
 }
-- (void)filterContentForSearchText:(NSString*)searchText{
-    //NSLog(@"AAAA");
-    //NSPredicate *resultPredicate = [NSPredicate predicateWithFormat:@"SELF beginswith %@", searchText];
-    //self.searchResults = [self.stations filteredArrayUsingPredicate:resultPredicate];
-    
-    NSString *key=@"ac2159434219a6b27bd1e0c0f49e1bd3";
-    NSString *urlString=[NSString stringWithFormat:@"https://api.trafiklab.se/sl/realtid/GetSite.json?stationSearch=%@&key=%@",[searchText stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding],key];
+
+- (void)getDeparturesById:(NSString *)stationId {
+    NSString *urlString = [NSString stringWithFormat:@"https://api.trafiklab.se/sl/realtid/GetDpsDepartures.json?siteId=%@&key=%@", stationId, self.SL_REALTID_API_KEY];
+    [self getAsyncJSON:urlString completionHandler:^(id result) {
+        [[NSOperationQueue mainQueue] addOperationWithBlock:^{
+            @try {
+                [self.searchResults removeAllObjects];
+                if (result == nil) return;
+                NSMutableDictionary *dict=(NSMutableDictionary*)result;
+                id stations = [[[dict objectForKey:@"DPS"] objectForKey:@"Buses"] objectForKey:@"DpsBus"];
+                if ([stations isKindOfClass:[NSArray class]]) {
+                    for (id station in stations) {
+                        [self.searchResults addObject:station];
+                    }
+                } else {
+                    [self.searchResults addObject:stations];
+                }
+            } @catch (NSException *exception) {
+            } @finally {
+                [self.tableView reloadData];
+            }
+        }];
+
+    }];
+}
+
+- (void)getStationsByString:(NSString *)searchText {
+    searchText = [searchText stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
+    NSString *urlString=[NSString stringWithFormat:@"https://api.trafiklab.se/sl/realtid/GetSite.json?stationSearch=%@&key=%@", searchText, self.SL_REALTID_API_KEY];
     self.lastSearhString = searchText;
     //id result = [self getJSON:urlString error:error];
     [self getAsyncJSON:urlString completionHandler:^(id result) {
         [[NSOperationQueue mainQueue] addOperationWithBlock:^{
             if (self.lastSearhString != searchText) return;
             @try {
-                [self.searchResults removeAllObjects];
+                [self.stations removeAllObjects];
                 if (result == nil) return;
                 NSMutableDictionary *dict=(NSMutableDictionary*)result;
                 
@@ -87,33 +124,17 @@
                 
                 if ([stations isKindOfClass:[NSArray class]]) {
                     for (id station in stations) {
-                        [self.searchResults addObject:[station objectForKey:@"Name"]];
+                        [self.stations addObject:station];
                     }
                 } else {
-                    [self.searchResults addObject:[stations objectForKey:@"Name"]];
+                    [self.stations addObject:stations];
                 }
             } @catch (NSException *exception) {
             } @finally {
                 [self.searchDisplayController.searchResultsTableView reloadData];
-                [self.tableView reloadData];
             }
         }];
     }];
-    
-    
-    
-}
-
-- (id)getJSON:( NSString *)urlString error:(NSError *)error {
-    NSURL *url=[NSURL URLWithString:urlString];
-    NSURLRequest * urlRequest =[NSURLRequest requestWithURL:url cachePolicy:NSURLRequestReturnCacheDataElseLoad timeoutInterval:5];
-    
-    
-    NSURLResponse *response;
-    NSData *urlData =[NSURLConnection sendSynchronousRequest:urlRequest returningResponse:&response error:&error];
-    if (urlData==nil) return nil;
-    
-    return [NSJSONSerialization JSONObjectWithData:urlData options:0 error:&error];
 }
 
 - (void)getAsyncJSON:( NSString *)urlString completionHandler:(void (^)(id))completionHandler {
